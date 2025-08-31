@@ -169,49 +169,53 @@ function normalizeText(text){
   return text.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 }
 
-document.querySelectorAll(".player.galatasaray .player").forEach(p=>{
-  const num=parseInt(p.dataset.num);
-  attempts[num]=2;
-  const status=document.createElement("span");
+// Galatasaray oyuncularına tıklayınca tahmin paneli aktif
+document.querySelectorAll(".player.galatasaray").forEach(p=>{
+  const num = parseInt(p.dataset.num);
+  attempts[num] = 2; // 2 tahmin hakkı
+  const status = document.createElement("span");
   status.classList.add("status");
   p.appendChild(status);
 
-  p.addEventListener("click",()=>{
-    document.querySelector("#playerGuess").dataset.num=num;
-    document.querySelector("#playerGuess").focus();
+  p.addEventListener("click", ()=>{
+    const input = document.querySelector("#playerGuess");
+    input.dataset.num = num; // tıklanan oyuncunun numarasını input'a ver
+    input.focus();
   });
 });
 
-document.querySelector("#guessBtn").addEventListener("click",()=>{
-  const input=document.querySelector("#playerGuess");
-  const num=parseInt(input.dataset.num);
-  const guess=normalizeText(input.value.trim());
-  const player=document.querySelector(`.player.galatasaray [data-num="${num}"]`)||document.querySelector(`.player.galatasaray .player[data-num="${num}"]`);
-  const status=player.querySelector(".status");
+// Tahmin butonu
+document.querySelector("#guessBtn").addEventListener("click", ()=>{
+  const input = document.querySelector("#playerGuess");
+  const num = parseInt(input.dataset.num);
+  const guess = normalizeText(input.value.trim());
+  const player = document.querySelector(`.player.galatasaray[data-num="${num}"]`);
+  const status = player.querySelector(".status");
 
   if(attempts[num]<0) return;
 
-  const correct=normalizeText(correctNames[num]).split(" ");
-  let isCorrect=false;
+  const correct = normalizeText(correctNames[num]).split(" ");
+  let isCorrect = false;
   for(let word of correct){
     if(word.length>=3 && guess.includes(word)){
-      isCorrect=true; break;
+      isCorrect=true;
+      break;
     }
   }
 
   if(isCorrect){
-    const pName=document.createElement("p");
-    pName.textContent=correctNames[num];
+    const pName = document.createElement("p");
+    pName.textContent = correctNames[num];
     player.appendChild(pName);
     status.textContent="✅";
-    attempts[num]=-1;
+    attempts[num] = -1;
   } else {
     attempts[num]--;
     alert("Yanlış! Kalan hakkınız: "+(attempts[num]+1));
     status.textContent="❌";
     if(attempts[num]<0){
-      const pName=document.createElement("p");
-      pName.textContent=input.value;
+      const pName = document.createElement("p");
+      pName.textContent = input.value;
       player.appendChild(pName);
     }
   }
