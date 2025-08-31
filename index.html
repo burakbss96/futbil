@@ -13,7 +13,6 @@
       display: flex;
     }
 
-    /* Skorboard */
     .scoreboard {
       display: flex;
       align-items: center;
@@ -39,18 +38,9 @@
     .fb-score { background-color: navy; }
     .gs-score { background-color: red; }
 
-    .team-score .score {
-      font-size: 36px;
-      margin-top: 5px;
-    }
+    .team-score .score { font-size: 36px; margin-top: 5px; }
+    .match-info span { display: block; font-size: 18px; text-align: center; }
 
-    .match-info span {
-      display: block;
-      font-size: 18px;
-      text-align: center;
-    }
-
-    /* Saha ve diziliş */
     .pitch {
       display: flex;
       flex-direction: column;
@@ -65,78 +55,28 @@
       margin: 20px 0;
     }
 
-    .line {
-      display: flex;
-      gap: 15px;
-      margin: 5px 0;
-    }
+    .line { display: flex; gap: 15px; margin: 5px 0; }
 
     .player {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      position: relative;
-      cursor: pointer;
-      flex-direction: column;
+      width: 60px; height: 60px; border-radius: 50%;
+      display: flex; justify-content: center; align-items: center;
+      font-weight: bold; position: relative; cursor: pointer; flex-direction: column;
     }
 
-    .player span {
-      font-size: 16px;
-      color: white;
-    }
+    .player span { font-size: 16px; color: white; }
+    .player p { font-size: 12px; margin-top: 3px; text-align: center; }
 
-    .player p {
-      font-size: 12px;
-      margin-top: 3px;
-      text-align: center;
-    }
+    .fenerbahce .player { background: linear-gradient(135deg, navy, yellow); }
+    .galatasaray .player { background: linear-gradient(135deg, red, yellow); }
 
-    /* Takım renkleri */
-    .fenerbahce .player {
-      background: linear-gradient(135deg, navy, yellow);
-    }
+    .status { position: absolute; left: -25px; top: 15px; font-size: 24px; }
 
-    .galatasaray .player {
-      background: linear-gradient(135deg, red, yellow);
-    }
-
-    /* Status (tik/çarpı) */
-    .status {
-      position: absolute;
-      left: -25px;
-      top: 15px;
-      font-size: 24px;
-    }
-
-    /* Tahmin paneli */
     .guess-panel {
-      width: 220px;
-      padding: 10px;
-      border-left: 2px solid white;
-      background: rgba(0,0,0,0.5);
+      width: 220px; padding: 10px; border-left: 2px solid white; background: rgba(0,0,0,0.5);
     }
-    #playerGuess {
-      width: 100%;
-      margin: 5px 0;
-      padding: 5px;
-      border-radius: 5px;
-      border: none;
-      text-align: center;
-    }
-    #guessBtn {
-      width: 100%;
-      padding: 5px;
-      margin-top: 5px;
-      cursor: pointer;
-    }
-    #guessResult {
-      margin-top: 10px;
-      font-size: 18px;
-    }
+    #playerGuess { width: 100%; margin: 5px 0; padding: 5px; border-radius: 5px; border: none; text-align: center; }
+    #guessBtn { width: 100%; padding: 5px; margin-top: 5px; cursor: pointer; }
+    #guessResult { margin-top: 10px; font-size: 18px; }
   </style>
 </head>
 <body>
@@ -200,7 +140,6 @@
   </div>
 </div>
 
-<!-- Tahmin paneli -->
 <div class="guess-panel">
   <h3>Tahmin</h3>
   <p>Galatasaray oyuncusu seçin ve ismini yazın:</p>
@@ -226,56 +165,58 @@ var correctNames = {
 
 const attempts = {};
 
-document.querySelectorAll(".player.galatasaray .player").forEach(p => {
-  const num = parseInt(p.dataset.num);
-  attempts[num] = 2; // 2 tahmin hakkı
-  const status = document.createElement("span");
+function normalizeText(text){
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+}
+
+document.querySelectorAll(".player.galatasaray .player").forEach(p=>{
+  const num=parseInt(p.dataset.num);
+  attempts[num]=2;
+  const status=document.createElement("span");
   status.classList.add("status");
   p.appendChild(status);
 
-  p.addEventListener("click", () => {
-    document.querySelector("#playerGuess").dataset.num = num;
+  p.addEventListener("click",()=>{
+    document.querySelector("#playerGuess").dataset.num=num;
     document.querySelector("#playerGuess").focus();
   });
 });
 
-document.querySelector("#guessBtn").addEventListener("click", () => {
-  const input = document.querySelector("#playerGuess");
-  const num = parseInt(input.dataset.num);
-  const guess = input.value.trim().toLowerCase();
-  const player = document.querySelector(`.player.galatasaray [data-num="${num}"]`) || document.querySelector(`.player.galatasaray .player[data-num="${num}"]`);
-  const status = player.querySelector(".status");
+document.querySelector("#guessBtn").addEventListener("click",()=>{
+  const input=document.querySelector("#playerGuess");
+  const num=parseInt(input.dataset.num);
+  const guess=normalizeText(input.value.trim());
+  const player=document.querySelector(`.player.galatasaray [data-num="${num}"]`)||document.querySelector(`.player.galatasaray .player[data-num="${num}"]`);
+  const status=player.querySelector(".status");
 
-  if(attempts[num] < 0) return;
+  if(attempts[num]<0) return;
 
-  const correct = correctNames[num].toLowerCase().split(" ");
-
-  let isCorrect = false;
+  const correct=normalizeText(correctNames[num]).split(" ");
+  let isCorrect=false;
   for(let word of correct){
-    if(guess.includes(word) && guess.length >= 3){
-      isCorrect = true;
-      break;
+    if(word.length>=3 && guess.includes(word)){
+      isCorrect=true; break;
     }
   }
 
   if(isCorrect){
-    const pName = document.createElement("p");
-    pName.textContent = correctNames[num];
+    const pName=document.createElement("p");
+    pName.textContent=correctNames[num];
     player.appendChild(pName);
-    status.textContent = "✅";
-    attempts[num] = -1;
+    status.textContent="✅";
+    attempts[num]=-1;
   } else {
     attempts[num]--;
-    alert("Yanlış! Kalan hakkınız: " + (attempts[num]+1));
-    status.textContent = "❌";
-    if(attempts[num] < 0){
-      const pName = document.createElement("p");
-      pName.textContent = guess;
+    alert("Yanlış! Kalan hakkınız: "+(attempts[num]+1));
+    status.textContent="❌";
+    if(attempts[num]<0){
+      const pName=document.createElement("p");
+      pName.textContent=input.value;
       player.appendChild(pName);
     }
   }
 
-  input.value = "";
+  input.value="";
 });
 </script>
 
