@@ -23,6 +23,7 @@
       border-radius: 10px;
       gap: 40px;
       margin: 20px 0;
+      width: 100%;
     }
 
     .team-score {
@@ -80,6 +81,7 @@
       font-weight: bold;
       position: relative;
       cursor: pointer;
+      flex-direction: column;
     }
 
     .player span {
@@ -89,7 +91,8 @@
 
     .player p {
       font-size: 12px;
-      margin-top: 45px;
+      margin-top: 3px;
+      text-align: center;
     }
 
     /* Takım renkleri */
@@ -97,21 +100,21 @@
       background: linear-gradient(135deg, navy, yellow);
     }
 
-    .gs {
+    .galatasaray .player {
       background: linear-gradient(135deg, red, yellow);
     }
 
     /* Status (tik/çarpı) */
     .status {
       position: absolute;
-      right: -20px;
-      top: 20px;
+      left: -25px;
+      top: 15px;
       font-size: 24px;
     }
 
     /* Tahmin paneli */
     .guess-panel {
-      width: 200px;
+      width: 220px;
       padding: 10px;
       border-left: 2px solid white;
       background: rgba(0,0,0,0.5);
@@ -158,46 +161,46 @@
 <div class="pitch">
   <!-- Fenerbahçe Üstte -->
   <div class="team fenerbahce">
-    <div class="line"><div class="player fb"><span>1</span><p>İrfan Can Eğribayat</p></div></div>
+    <div class="line"><div class="player"><span>1</span><p>İrfan Can Eğribayat</p></div></div>
     <div class="line">
-      <div class="player fb"><span>4</span><p>Çağlar Söyüncü</p></div>
-      <div class="player fb"><span>37</span><p>M. Skriniar</p></div>
-      <div class="player fb"><span>95</span><p>Yusuf Akçiçek</p></div>
+      <div class="player"><span>4</span><p>Çağlar Söyüncü</p></div>
+      <div class="player"><span>37</span><p>M. Skriniar</p></div>
+      <div class="player"><span>95</span><p>Yusuf Akçiçek</p></div>
     </div>
     <div class="line">
-      <div class="player fb"><span>70</span><p>Oğuz Aydın</p></div>
-      <div class="player fb"><span>13</span><p>Fred</p></div>
-      <div class="player fb"><span>34</span><p>S. Amrabat</p></div>
-      <div class="player fb"><span>18</span><p>F. Kostic</p></div>
+      <div class="player"><span>70</span><p>Oğuz Aydın</p></div>
+      <div class="player"><span>13</span><p>Fred</p></div>
+      <div class="player"><span>34</span><p>S. Amrabat</p></div>
+      <div class="player"><span>18</span><p>F. Kostic</p></div>
     </div>
-    <div class="line"><div class="player fb"><span>53</span><p>S. Szymanski</p></div></div>
+    <div class="line"><div class="player"><span>53</span><p>S. Szymanski</p></div></div>
     <div class="line">
-      <div class="player fb"><span>19</span><p>Y. En-Nesyri</p></div>
-      <div class="player fb"><span>94</span><p>A. Talisca</p></div>
+      <div class="player"><span>19</span><p>Y. En-Nesyri</p></div>
+      <div class="player"><span>94</span><p>A. Talisca</p></div>
     </div>
   </div>
 
   <!-- Galatasaray Altta -->
   <div class="team galatasaray">
-    <div class="line"><div class="player gs" data-num="45"><span>45</span></div></div>
-    <div class="line"><div class="player gs" data-num="20"><span>20</span></div></div>
+    <div class="line"><div class="player" data-num="45"><span>45</span></div></div>
+    <div class="line"><div class="player" data-num="20"><span>20</span></div></div>
     <div class="line">
-      <div class="player gs" data-num="53"><span>53</span></div>
-      <div class="player gs" data-num="99"><span>99</span></div>
-      <div class="player gs" data-num="34"><span>34</span></div>
-      <div class="player gs" data-num="11"><span>11</span></div>
+      <div class="player" data-num="53"><span>53</span></div>
+      <div class="player" data-num="99"><span>99</span></div>
+      <div class="player" data-num="34"><span>34</span></div>
+      <div class="player" data-num="11"><span>11</span></div>
     </div>
     <div class="line">
-      <div class="player gs" data-num="17"><span>17</span></div>
-      <div class="player gs" data-num="42"><span>42</span></div>
-      <div class="player gs" data-num="6"><span>6</span></div>
-      <div class="player gs" data-num="23"><span>23</span></div>
+      <div class="player" data-num="17"><span>17</span></div>
+      <div class="player" data-num="42"><span>42</span></div>
+      <div class="player" data-num="6"><span>6</span></div>
+      <div class="player" data-num="23"><span>23</span></div>
     </div>
-    <div class="line"><div class="player gs" data-num="19"><span>19</span></div></div>
+    <div class="line"><div class="player" data-num="19"><span>19</span></div></div>
   </div>
 </div>
 
-<!-- Sağda tahmin paneli -->
+<!-- Tahmin paneli -->
 <div class="guess-panel">
   <h3>Tahmin</h3>
   <p>Galatasaray oyuncusu seçin ve ismini yazın:</p>
@@ -223,7 +226,7 @@ var correctNames = {
 
 const attempts = {};
 
-document.querySelectorAll(".player.gs").forEach(p => {
+document.querySelectorAll(".player.galatasaray .player").forEach(p => {
   const num = parseInt(p.dataset.num);
   attempts[num] = 2; // 2 tahmin hakkı
   const status = document.createElement("span");
@@ -239,15 +242,25 @@ document.querySelectorAll(".player.gs").forEach(p => {
 document.querySelector("#guessBtn").addEventListener("click", () => {
   const input = document.querySelector("#playerGuess");
   const num = parseInt(input.dataset.num);
-  const guess = input.value.trim();
-  const player = document.querySelector(`.player.gs[data-num="${num}"]`);
+  const guess = input.value.trim().toLowerCase();
+  const player = document.querySelector(`.player.galatasaray [data-num="${num}"]`) || document.querySelector(`.player.galatasaray .player[data-num="${num}"]`);
   const status = player.querySelector(".status");
 
   if(attempts[num] < 0) return;
 
-  if(guess === correctNames[num]) {
+  const correct = correctNames[num].toLowerCase().split(" ");
+
+  let isCorrect = false;
+  for(let word of correct){
+    if(guess.includes(word) && guess.length >= 3){
+      isCorrect = true;
+      break;
+    }
+  }
+
+  if(isCorrect){
     const pName = document.createElement("p");
-    pName.textContent = guess;
+    pName.textContent = correctNames[num];
     player.appendChild(pName);
     status.textContent = "✅";
     attempts[num] = -1;
