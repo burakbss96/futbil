@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futbol Tahmin Sayfası</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b8a2e;
+      color: white;
+      display: flex;
+    }
+
+    /* Skorboard */
+    .scoreboard {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      padding: 10px 30px;
+      border-radius: 10px;
+      gap: 40px;
+      margin: 20px 0;
+    }
+
+    .team-score {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .fb-score { background-color: navy; }
+    .gs-score { background-color: red; }
+
+    .team-score .score {
+      font-size: 36px;
+      margin-top: 5px;
+    }
+
+    .match-info span {
+      display: block;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    /* Saha ve diziliş */
+    .pitch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .line {
+      display: flex;
+      gap: 15px;
+      margin: 5px 0;
+    }
+
+    .player {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .player span {
+      font-size: 16px;
+      color: white;
+    }
+
+    .player p {
+      font-size: 12px;
+      margin-top: 45px;
+    }
+
+    /* Takım renkleri */
+    .fenerbahce .player {
+      background: linear-gradient(135deg, navy, yellow);
+    }
+
+    .gs {
+      background: linear-gradient(135deg, red, yellow);
+    }
+
+    /* Status (tik/çarpı) */
+    .status {
+      position: absolute;
+      right: -20px;
+      top: 20px;
+      font-size: 24px;
+    }
+
+    /* Tahmin paneli */
+    .guess-panel {
+      width: 200px;
+      padding: 10px;
+      border-left: 2px solid white;
+      background: rgba(0,0,0,0.5);
+    }
+    #playerGuess {
+      width: 100%;
+      margin: 5px 0;
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+      text-align: center;
+    }
+    #guessBtn {
+      width: 100%;
+      padding: 5px;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+    #guessResult {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="scoreboard">
+  <div class="team-score fb-score">
+    <span>Fenerbahçe</span>
+    <div class="score">1</div>
+  </div>
+
+  <div class="match-info">
+    <span>02.04.2025</span>
+    <span>Fenerbahçe - Galatasaray</span>
+  </div>
+
+  <div class="team-score gs-score">
+    <span>Galatasaray</span>
+    <div class="score">2</div>
+  </div>
+</div>
+
+<div class="pitch">
+  <!-- Fenerbahçe Üstte -->
+  <div class="team fenerbahce">
+    <div class="line"><div class="player fb"><span>1</span><p>İrfan Can Eğribayat</p></div></div>
+    <div class="line">
+      <div class="player fb"><span>4</span><p>Çağlar Söyüncü</p></div>
+      <div class="player fb"><span>37</span><p>M. Skriniar</p></div>
+      <div class="player fb"><span>95</span><p>Yusuf Akçiçek</p></div>
+    </div>
+    <div class="line">
+      <div class="player fb"><span>70</span><p>Oğuz Aydın</p></div>
+      <div class="player fb"><span>13</span><p>Fred</p></div>
+      <div class="player fb"><span>34</span><p>S. Amrabat</p></div>
+      <div class="player fb"><span>18</span><p>F. Kostic</p></div>
+    </div>
+    <div class="line"><div class="player fb"><span>53</span><p>S. Szymanski</p></div></div>
+    <div class="line">
+      <div class="player fb"><span>19</span><p>Y. En-Nesyri</p></div>
+      <div class="player fb"><span>94</span><p>A. Talisca</p></div>
+    </div>
+  </div>
+
+  <!-- Galatasaray Altta -->
+  <div class="team galatasaray">
+    <div class="line"><div class="player gs" data-num="45"><span>45</span></div></div>
+    <div class="line"><div class="player gs" data-num="20"><span>20</span></div></div>
+    <div class="line">
+      <div class="player gs" data-num="53"><span>53</span></div>
+      <div class="player gs" data-num="99"><span>99</span></div>
+      <div class="player gs" data-num="34"><span>34</span></div>
+      <div class="player gs" data-num="11"><span>11</span></div>
+    </div>
+    <div class="line">
+      <div class="player gs" data-num="17"><span>17</span></div>
+      <div class="player gs" data-num="42"><span>42</span></div>
+      <div class="player gs" data-num="6"><span>6</span></div>
+      <div class="player gs" data-num="23"><span>23</span></div>
+    </div>
+    <div class="line"><div class="player gs" data-num="19"><span>19</span></div></div>
+  </div>
+</div>
+
+<!-- Sağda tahmin paneli -->
+<div class="guess-panel">
+  <h3>Tahmin</h3>
+  <p>Galatasaray oyuncusu seçin ve ismini yazın:</p>
+  <input type="text" id="playerGuess" placeholder="İsim yaz">
+  <button id="guessBtn">Tahmin Et</button>
+  <div id="guessResult"></div>
+</div>
+
+<script>
+var correctNames = {
+  45: "V. Osimhen",
+  20: "G. Sara",
+  53: "Barış Alper Yılmaz",
+  99: "M. Lemina",
+  34: "L. Torreira",
+  11: "Yunus Akgün",
+  17: "Eren Elmalı",
+  42: "Abdülkerim Bardakcı",
+  6: "D. Sanchez",
+  23: "Kaan Ayhan",
+  19: "Günay Güvenç"
+};
+
+const attempts = {};
+
+document.querySelectorAll(".player.gs").forEach(p => {
+  const num = parseInt(p.dataset.num);
+  attempts[num] = 2; // 2 tahmin hakkı
+  const status = document.createElement("span");
+  status.classList.add("status");
+  p.appendChild(status);
+
+  p.addEventListener("click", () => {
+    document.querySelector("#playerGuess").dataset.num = num;
+    document.querySelector("#playerGuess").focus();
+  });
+});
+
+document.querySelector("#guessBtn").addEventListener("click", () => {
+  const input = document.querySelector("#playerGuess");
+  const num = parseInt(input.dataset.num);
+  const guess = input.value.trim();
+  const player = document.querySelector(`.player.gs[data-num="${num}"]`);
+  const status = player.querySelector(".status");
+
+  if(attempts[num] < 0) return;
+
+  if(guess === correctNames[num]) {
+    const pName = document.createElement("p");
+    pName.textContent = guess;
+    player.appendChild(pName);
+    status.textContent = "✅";
+    attempts[num] = -1;
+  } else {
+    attempts[num]--;
+    alert("Yanlış! Kalan hakkınız: " + (attempts[num]+1));
+    status.textContent = "❌";
+    if(attempts[num] < 0){
+      const pName = document.createElement("p");
+      pName.textContent = guess;
+      player.appendChild(pName);
+    }
+  }
+
+  input.value = "";
+});
+</script>
+
+</body>
+</html>
